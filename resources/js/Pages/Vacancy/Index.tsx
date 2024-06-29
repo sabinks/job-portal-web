@@ -1,7 +1,11 @@
 import { Link, Head } from "@inertiajs/react";
 import { PageProps } from "@/types";
 
-export default function Welcome({ auth, year }: PageProps<{ year: string }>) {
+export default function Index({
+    auth,
+    year,
+    employers,
+}: PageProps<{ year: string }>) {
     const handleImageError = () => {
         document
             .getElementById("screenshot-container")
@@ -12,6 +16,7 @@ export default function Welcome({ auth, year }: PageProps<{ year: string }>) {
             ?.classList.add("!flex-row");
         document.getElementById("background")?.classList.add("!hidden");
     };
+    console.log(employers);
 
     return (
         <>
@@ -22,7 +27,7 @@ export default function Welcome({ auth, year }: PageProps<{ year: string }>) {
                     className="absolute -left-20 top-0 max-w-[877px]"
                     src="https://laravel.com/assets/img/welcome/background.svg"
                 />
-                <div className="relative min-h-screen flex flex-col items-center justify-center selection:bg-[#FF2D20] selection:text-white">
+                <div className="relative min-h-screen flex justify-center selection:bg-[#FF2D20] selection:text-white">
                     <div className="relative w-full max-w-2xl px-6 lg:max-w-7xl">
                         <header className="grid grid-cols-2 items-center gap-2 py-10 lg:grid-cols-3">
                             <div className="flex lg:justify-center lg:col-start-2">
@@ -71,7 +76,32 @@ export default function Welcome({ auth, year }: PageProps<{ year: string }>) {
                             </nav>
                         </header>
 
-                        <main className="mt-6">{}</main>
+                        <main className="mt-6 container mx-auto">
+                            {employers?.map(
+                                ({ organization_name, vacancies }: any) => {
+                                    return (
+                                        <div className="flex">
+                                            <h1>{organization_name}</h1>
+                                            <div className="">
+                                                <ul>
+                                                    {vacancies.map(
+                                                        ({
+                                                            job_title,
+                                                        }: any) => {
+                                                            return (
+                                                                <li>
+                                                                    {job_title}
+                                                                </li>
+                                                            );
+                                                        }
+                                                    )}
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    );
+                                }
+                            )}
+                        </main>
 
                         <footer className="py-16 text-center text-sm text-black dark:text-white/70">
                             Job Portal &#169; {year}

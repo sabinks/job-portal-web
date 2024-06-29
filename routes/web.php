@@ -1,22 +1,26 @@
 <?php
 
-use App\Http\Controllers\IndustryTypeController;
-use App\Http\Controllers\JobTypeController;
-use App\Http\Controllers\PositionTypeController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\RolePermissionController;
-use Illuminate\Foundation\Application;
-use Illuminate\Support\Facades\Route;
+use Carbon\Carbon;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Foundation\Application;
+use App\Http\Controllers\JobTypeController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\IndustryTypeController;
+use App\Http\Controllers\PositionTypeController;
+use App\Http\Controllers\RolePermissionController;
+use App\Http\Controllers\VacancyController;
 
-Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
-});
+// Route::get('/', function () {
+//     return Inertia::render('Welcome', [
+// 'canLogin' => Route::has('login'),
+// 'canRegister' => Route::has('seeker/register'),
+// 'laravelVersion' => Application::VERSION,
+// 'phpVersion' => PHP_VERSION,
+// 'year' => Carbon::now()->year
+//     ]);
+// });
+Route::get('/', [VacancyController::class, 'index'])->name('vacancy.index');
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
@@ -27,7 +31,15 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
-Route::get('/role-permissions', [RolePermissionController::class, 'index'])->middleware(('auth:sanctum'))->name('role.permissions');
+Route::get('/vacancy', [VacancyController::class, 'index'])->name('vacancy.index');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/auth/vacancy', [VacancyController::class, 'index'])->name('vacancy.index');
+    Route::get('/auth/vacancy/create', [VacancyController::class, 'create'])->name('auth.vacancy.create');
+    Route::post('auth/vacancy', [VacancyController::class, 'store'])->name('auth.vacancy.store');
+});
+Route::get('/role-permissions', [RolePermissionController::class, 'index'])
+    ->middleware((['auth:sanctum', 'role:Superadmin']))->name('role.permissions');
 
 Route::get('industry-type-list', [IndustryTypeController::class, 'list'])->name('industry-type.list');
 Route::get('job-type-list', [JobTypeController::class, 'list'])->name('job-type.list');

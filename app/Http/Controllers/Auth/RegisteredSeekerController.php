@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\SeekerRegisteredJob;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
@@ -49,10 +50,9 @@ class RegisteredSeekerController extends Controller
         $role = Role::whereName('Seeker')->first();
         $user->assignRole($role);
 
-        event(new Registered($user));
-
+        SeekerRegisteredJob::dispatch($user)->onQueue('default');
         Auth::login($user);
 
-        return redirect(route('dashboard', absolute: false));
+        return redirect(route('login', absolute: true));
     }
 }

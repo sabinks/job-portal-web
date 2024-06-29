@@ -5,7 +5,6 @@ import InputLabel from "@/Components/InputLabel";
 import PrimaryButton from "@/Components/PrimaryButton";
 import TextInput from "@/Components/TextInput";
 import { Head, Link, useForm, usePage } from "@inertiajs/react";
-import ReCAPTCHA from "react-google-recaptcha";
 import Captcha from "@/Components/Captcha";
 export default function Register({ props }: any) {
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -39,22 +38,9 @@ export default function Register({ props }: any) {
     };
     return (
         <GuestLayout>
-            <Head title="Register" />
+            <Head title="Job Seeker Register" />
 
             <form onSubmit={submit}>
-                <div>
-                    <InputLabel htmlFor="mobile" value="Mobile Number" />
-                    <TextInput
-                        id="mobile"
-                        name="mobile"
-                        value={data.mobile}
-                        className="mt-1 block w-full"
-                        autoComplete="mobile"
-                        isFocused={true}
-                        onChange={(e) => setData("mobile", e.target.value)}
-                    />
-                    <InputError message={errors.mobile} className="mt-2" />
-                </div>
                 <div>
                     <InputLabel htmlFor="name" value="Name" />
                     <TextInput
@@ -82,7 +68,19 @@ export default function Register({ props }: any) {
                     />
                     <InputError message={errors.email} className="mt-2" />
                 </div>
-
+                <div className="mt-4">
+                    <InputLabel htmlFor="mobile" value="Mobile Number" />
+                    <TextInput
+                        id="mobile"
+                        name="mobile"
+                        value={data.mobile}
+                        className="mt-1 block w-full"
+                        autoComplete="mobile"
+                        isFocused={true}
+                        onChange={(e) => setData("mobile", e.target.value)}
+                    />
+                    <InputError message={errors.mobile} className="mt-2" />
+                </div>
                 <div className="mt-4">
                     <InputLabel htmlFor="password" value="Password" />
                     <TextInput
@@ -122,7 +120,7 @@ export default function Register({ props }: any) {
                     <Captcha siteKey={siteKey} onChange={onChange} />
                 </div>
 
-                <div className="flex items-center justify-end mt-4">
+                <div className="flex items-center justify-center mt-4">
                     <Link
                         href={route("login")}
                         className="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"

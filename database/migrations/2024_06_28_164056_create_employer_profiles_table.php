@@ -18,9 +18,9 @@ return new class extends Migration
             $table->foreignIdFor(User::class);
             $table->string('organization_name');
             $table->string('contact_number');
-            $table->string('address');
-            $table->string('banner');
-            $table->string('banner_path');
+            $table->string('address')->nullable();
+            $table->string('banner')->nullable();
+            $table->string('banner_path')->nullable();;
             $table->boolean('display_address')->default(true);
             $table->boolean('make_profile_public')->default(true);
             $table->foreignIdFor(IndustryType::class);
