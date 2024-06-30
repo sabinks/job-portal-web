@@ -18,7 +18,12 @@ export const checkRoleMatch = (parentArray: string[], subsetArray: string[]) => 
         return parentArray.includes(el)
     })
 }
-
+export const checkSubset = (parentArray: string[], subset: string) => {
+    if (parentArray.length == 0 && subset == '') {
+        return false
+    }
+    return parentArray.includes(subset) ? true : false
+}
 export const booleanCheck = (check: any) => Boolean(parseInt(check))
 
 export const currency = (value: number, decimal: number) => parseFloat(value.toString()).toFixed(decimal)

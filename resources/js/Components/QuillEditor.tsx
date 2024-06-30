@@ -5,9 +5,9 @@ import InputLabel from "./InputLabel";
 // import ImageResize from "quill-image-resize-module-react";
 // Quill.register("modules/imageResize", ImageResize);
 
-function QuillEditor({ charLimit = 500, onChange, name, label }: any) {
+function QuillEditor({ charLimit = 500, onChange, value, name, label }: any) {
     const [currentChart, setCurrentChar] = useState(0);
-    const [content, setContent] = useState<any>();
+    const [content, setContent] = useState<any>(value);
 
     const modules = {
         toolbar: [
@@ -63,10 +63,10 @@ function QuillEditor({ charLimit = 500, onChange, name, label }: any) {
     ];
     return (
         <div>
-            <div className="h-48">
+            <div className="h-48 border-gray-300 focus:border-accent2 focus:ring-accent2">
                 <InputLabel htmlFor={name} value={label} />
                 <ReactQuill
-                    className="h-36"
+                    className="h-36 focus:border-accent2 focus:ring-accent2"
                     theme="snow"
                     value={content}
                     onChange={(
