@@ -10,7 +10,7 @@ class EmployerProfile extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id', 'organization_name', 'contact_number', 'address',
+        'user_id', 'organization_name', 'slug', 'contact_number', 'address',
         'banner', 'banner_path',
         'display_address',
         'make_profile_public',
@@ -20,5 +20,9 @@ class EmployerProfile extends Model
     public function vacancies()
     {
         return $this->hasMany(Vacancy::class, 'created_for', 'user_id');
+    }
+    public function industryType()
+    {
+        return $this->belongsTo(IndustryType::class, 'industry_type_id');
     }
 }

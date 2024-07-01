@@ -57,26 +57,59 @@ export default function Index({
                             </nav>
                         </header>
 
-                        <main className="mt-6 container mx-auto">
+                        <main className="mt-6 container mx-auto grid grid-cols-4">
                             {employers?.map(
-                                ({ organization_name, vacancies }: any) => {
+                                ({
+                                    organization_name,
+                                    vacancies,
+                                    slug,
+                                    banner_public_path,
+                                }: any) => {
                                     return (
-                                        <div className="flex">
-                                            <h1>{organization_name}</h1>
+                                        <div className="flex flex-row space-x-4 border rounded-md bg-white p-4 text-[0.8125rem] leading-6 text-slate-900 shadow-xl shadow-black/5 ring-1 ring-slate-700/10">
                                             <div className="">
-                                                <ul>
-                                                    {vacancies.map(
-                                                        ({
-                                                            job_title,
-                                                        }: any) => {
-                                                            return (
-                                                                <li>
-                                                                    {job_title}
-                                                                </li>
-                                                            );
-                                                        }
-                                                    )}
-                                                </ul>
+                                                <img
+                                                    className="w-12 h-12 object-cover"
+                                                    src={banner_public_path}
+                                                    alt="Banner Image"
+                                                />
+                                            </div>
+                                            <div className="flex-col">
+                                                <h1 className="text-sm truncate">
+                                                    <Link
+                                                        href={route(
+                                                            "employer.show",
+                                                            slug
+                                                        )}
+                                                    >
+                                                        {organization_name}
+                                                    </Link>
+                                                </h1>
+                                                <div className="">
+                                                    <ul className="">
+                                                        {vacancies.map(
+                                                            ({
+                                                                job_title,
+                                                                slug,
+                                                            }: any) => {
+                                                                return (
+                                                                    <li className=" list-inside list-disc text-sm">
+                                                                        <Link
+                                                                            href={route(
+                                                                                "vacancy.show",
+                                                                                slug
+                                                                            )}
+                                                                        >
+                                                                            {
+                                                                                job_title
+                                                                            }
+                                                                        </Link>
+                                                                    </li>
+                                                                );
+                                                            }
+                                                        )}
+                                                    </ul>
+                                                </div>
                                             </div>
                                         </div>
                                     );

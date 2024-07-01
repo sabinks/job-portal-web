@@ -11,6 +11,7 @@ use App\Http\Controllers\PositionTypeController;
 use App\Http\Controllers\RolePermissionController;
 use App\Http\Controllers\VacancyController;
 use App\Http\Controllers\Auth\VacancyController as AuthVacancyController;
+use App\Http\Controllers\EmployerProfileController;
 
 // Route::get('/', function () {
 //     return Inertia::render('Welcome', [
@@ -22,10 +23,13 @@ use App\Http\Controllers\Auth\VacancyController as AuthVacancyController;
 //     ]);
 // });
 Route::get('/', [VacancyController::class, 'index'])->name('vacancy.index');
+Route::get('/vacancy/{slug}', [VacancyController::class, 'show'])->name('vacancy.show');
+Route::get('/employer/{slug}', [EmployerProfileController::class, 'show'])->name('employer.show');
+Route::get('/employer/{slug}/vacancies', [EmployerProfileController::class, 'showVacancies'])->name('employer-vacancies.show');
 
 Route::middleware('auth')->group(function () {
     Route::get('/auth/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/auth/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::put('/auth/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/auth/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 

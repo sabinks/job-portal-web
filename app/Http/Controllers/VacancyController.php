@@ -17,8 +17,11 @@ class VacancyController extends Controller
      */
     public function index()
     {
+        $employers = EmployerProfile::has('vacancies')->with(['vacancies:id,slug,job_title,created_for'])
+            ->select('organization_name', 'slug', 'user_id', 'banner_public_path')
+            ->get();
         return Inertia::render('Vacancy/Index', [
-            'employers' => EmployerProfile::with(['vacancies:id,slug,job_title,created_for'])->select('organization_name', 'user_id')->get(),
+            'employers' => $employers,
             'vacancies' => Vacancy::all(),
             // 'canLogin' => Route::has('login'),
             // 'canRegister' => Route::has('seeker/register'),
@@ -81,9 +84,13 @@ class VacancyController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Vacancy $vacancy)
+    public function show(String $slug)
     {
-        //
+        $vacancy = Vacancy::where('slug', $slug)->first();
+
+        return Inertia::render('Vacancy/Show')->with([
+            'vacancy' => $vacancy
+        ]);
     }
 
     /**

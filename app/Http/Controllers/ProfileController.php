@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ProfileUpdateRequest;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use Inertia\Response;
+use Illuminate\Http\Request;
+use App\Models\EmployerProfile;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Redirect;
+use App\Http\Requests\ProfileUpdateRequest;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 class ProfileController extends Controller
 {
@@ -21,6 +23,7 @@ class ProfileController extends Controller
         return Inertia::render('Profile/Edit', [
             'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
             'status' => session('status'),
+            'employer_profile' => Auth::user()->hasRole('Employer') ? Auth::user()->employer_profile : null,
         ]);
     }
 
@@ -34,8 +37,22 @@ class ProfileController extends Controller
         if ($request->user()->isDirty('email')) {
             $request->user()->email_verified_at = null;
         }
-
         $request->user()->save();
+        if ($request->hasFile('banner')) {
+            $image = $request->file('banner');
+            $employer = EmployerProfile::where('user_id', $request->user()->id)->first();
+            $old_file_path = $employer['banner_storage_path'];
+            $filename = time() . rand(10000, 99999) . "." . $image->getClientOriginalExtension();
+            $result = $image->storeAs('/public/banner', $filename);
+            $employer['banner'] =  $filename;
+            $employer['banner_public_path'] = '/storage/banner/' . $filename;
+            $employer['banner_storage_path'] = '/public/banner/' . $filename;
+            $employer->update();
+            if (Storage::exists($old_file_path)) {
+                Storage::delete($old_file_path);
+            }
+        }
+
 
         return Redirect::route('profile.edit');
     }

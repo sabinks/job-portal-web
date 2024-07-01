@@ -20,7 +20,10 @@ class VacancyController extends Controller
     public function index()
     {
         return Inertia::render('Auth/Vacancy/Index', [
-            'employers' => EmployerProfile::with(['vacancies:id,slug,job_title,created_for'])->select('organization_name', 'user_id')->get(),
+            'employers' => EmployerProfile::has('vacancies')
+                ->with(['vacancies:id,slug,job_title,created_for'])
+                ->select('organization_name', 'user_id', 'slug')
+                ->get(),
             'vacancies' => Vacancy::all(),
             // 'canLogin' => Route::has('login'),
             // 'canRegister' => Route::has('seeker/register'),

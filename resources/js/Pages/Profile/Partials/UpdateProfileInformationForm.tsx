@@ -17,17 +17,34 @@ export default function UpdateProfileInformation({
     className?: string;
 }) {
     const user = usePage<PageProps>().props.auth.user;
+    const employer_profile = usePage<PageProps>().props;
 
-    const { data, setData, patch, errors, processing, recentlySuccessful } =
-        useForm({
-            name: user.name,
-            email: user.email,
-        });
+    const {
+        data,
+        setData,
+        post,
+        patch,
+        put,
+        errors,
+        processing,
+        recentlySuccessful,
+    } = useForm({
+        name: user.name,
+        email: user.email,
+        banner: "",
+        _method: "put",
+    });
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
+        post(route("profile.update"), {
+            forceFormData: true,
+        });
+    };
 
-        patch(route("profile.update"));
+    const handleChange = (e: any) => {
+        const { files } = e.target;
+        setData("banner", files[0]);
     };
 
     return (
@@ -70,7 +87,17 @@ export default function UpdateProfileInformation({
                         // onChange={(e) => setData("email", e.target.value)}
                         autoComplete="username"
                     />
-
+                    <InputError className="mt-2" message={errors.email} />
+                </div>
+                <div>
+                    <InputLabel htmlFor="email" value="Banner" />
+                    <img src={user?.employer_profile?.banner_public_path} />
+                    <TextInput
+                        id="banner"
+                        type="file"
+                        className="mt-1 block w-full"
+                        onChange={(e) => handleChange(e)}
+                    />
                     <InputError className="mt-2" message={errors.email} />
                 </div>
 
